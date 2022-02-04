@@ -5,14 +5,22 @@ import { json, urlencoded } from "body-parser";
 const app = express();
 
 app.use(morgan('dev'));
+app.use(json());
+app.use(urlencoded({extended:true}));      // 
 
 
-app.get('/', (req, res) => {
+const customLogger = (req, res, next) => {
+    console.log("Logger incoming");
+    console.log(req.body);
+    next();
+}
+
+app.get('/', customLogger, (req, res) => {
     console.log(req.body);
     res.send({message: "OK"});
 });
 
-app.post('/', (req, res) => {
+app.post('/', customLogger, (req, res) => {
     console.log(req.body);
     res.send({message: "OK POST"});
 });
